@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/jerome/code/python/intention_recognition/title_recognition/title_recognition.tflearn"
+all_model_checkpoint_paths: "/home/jerome/code/python/intention_recognition/title_recognition/title_recognition.tflearn"
