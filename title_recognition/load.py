@@ -50,6 +50,7 @@ def chat():
 
         results = model.predict([bag_of_words(inp, words)])
         results_index = numpy.argmax(results)
+        print(results)
         title = labels[results_index]
 
         print(title)
