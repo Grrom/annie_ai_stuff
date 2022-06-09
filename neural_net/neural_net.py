@@ -60,7 +60,6 @@ output = numpy.array(output)
 with open("data.pickle", "wb") as f:
     pickle.dump((words, labels, training, output), f)
 
-# tensorflow.reset_default_graph()
 print("\nwords")
 print(words)
 print("\ndocs x")

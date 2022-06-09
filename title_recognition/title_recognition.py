@@ -12,7 +12,7 @@ stemmer = LancasterStemmer()
 
 
 with open("anime_titles.json") as file:
-    titles = json.load(file)
+    animes = json.load(file)
 
 words = []
 labels = []
@@ -20,14 +20,15 @@ docs_x = []
 docs_y = []
 
 
-for title in titles:
-    tokenized = nltk.word_tokenize(title)
-    words.extend(tokenized)
-    docs_x.append(tokenized)
-    docs_y.append(title)
+for anime in animes:
+    for alternative_title in anime["alternative"]:
+        tokenized = nltk.word_tokenize(alternative_title)
+        words.extend(tokenized)
+        docs_x.append(tokenized)
+        docs_y.append(anime["title"])
 
-    if title not in labels:
-        labels.append(title)
+    if anime["title"] not in labels:
+        labels.append(anime["title"])
 
 words = [stemmer.stem(w.lower()) for w in words if w not in ["?", ":"]]
 words = sorted(list(set(words)))
@@ -38,7 +39,7 @@ labels = sorted(labels)
 training = []
 output = []
 
-out_empty = [0 for _ in range(len(titles))]
+out_empty = [0 for _ in range(len(animes))]
 
 for x, doc in enumerate(docs_x):
     bag = []
@@ -58,13 +59,25 @@ for x, doc in enumerate(docs_x):
 training = numpy.array(training)
 output = numpy.array(output)
 
+print("\nwords")
+print(words)
+print("\ndocs x")
+print(docs_x)
+print("\ndocs y")
+print(docs_y)
+print("\n training")
+print(training)
+print("\n output")
+print(output)
+
 with open("anime_titles.pickle", "wb") as f:
     pickle.dump((words, labels, training, output), f)
 
 
 net = tflearn.input_data(shape=[None, len(training[0])])
-net = tflearn.fully_connected(net, 8)
-net = tflearn.fully_connected(net, 8)
+net = tflearn.fully_connected(net, 12)
+net = tflearn.fully_connected(net, 12)
+net = tflearn.fully_connected(net, 12)
 net = tflearn.fully_connected(net, len(output[0]), activation="softmax")
 net = tflearn.regression(net)
 
